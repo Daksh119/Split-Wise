@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String
+  createdAt DateTime @default(now())
+  user      User?
+  group     Group?
+}
+
+model User {
+  id            String                   @id @default(cuid())
+  name          String
+  email         String                   @unique
+  emailVerified DateTime?
+  password      String
+  balance       Int                      @default(0)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  imageId       String?                  @unique
+  image         Image?                   @relation(fields: [imageId], references: [id])
+  accounts      Account[]
+  groups        GroupMember[]
+  transaction   Transaction[]
+  contributors  TransactionContributor[]
+  recipients    TransactionRecipient[]
+  fromUserId    UserGroupBalance[]       @relation("fromUserId")
+  toUserId      UserGroupBalance[]       @relation("toUserId")
+
+  @@map("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Group {
+  id               String             @id @default(cuid())
+  name             String
+  imageId          String?            @unique
+  image            Image?             @relation(fields: [imageId], references: [id])
+  balance          Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  transactions     Transaction[]
+  members          GroupMember[]
+  userGroupBalance UserGroupBalance[]
+}
+
+model GroupMember {
+  userId  String
+  groupId String
+  balance Int    @default(0)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+}
+
+model Transaction {
+  id            String                   @id @default(cuid())
+  type          TransactionType          @default(Payment)
+  description   String
+  amount        Float
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  creatorUserId String
+  user          User                     @relation(fields: [creatorUserId], references: [id])
+  groupId       String
+  groups        Group                    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  contributors  TransactionContributor[]
+  recipients    TransactionRecipient[]
+}
+
+enum TransactionType {
+  Payment
+  Settlement
+}
+
+model TransactionContributor {
+  transactionId String
+  userId        String
+  amount        Float
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([transactionId, userId])
+}
+
+model TransactionRecipient {
+  transactionId String
+  userId        String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Float
+
+  @@id([transactionId, userId])
+}
+
+model UserGroupBalance {
+  groupId    String
+  fromUserId String
+  toUserId   String
+  amount     Float    @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  group      Group    @relation(fields: [groupId], references: [id])
+  fromUser   User     @relation(name: "fromUserId", fields: [fromUserId], references: [id])
+  toUser     User     @relation(name: "toUserId", fields: [toUserId], references: [id])
+
+  @@id([groupId, fromUserId, toUserId])
+  @@unique([fromUserId, toUserId])
+  @@index([fromUserId], name: "fromUserId")
+  @@index([toUserId], name: "toUserId")
+  @@map("UserGroupBalances")
+}
