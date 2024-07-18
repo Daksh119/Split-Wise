@@ -14,8 +14,6 @@ import NotFound from '@/components/not-found';
 import ErrorPage from '@/components/error-page';
 import CardWrapper from '../my-ui/card-wrapper';
 
-export const dynamic = 'force-dynamic';
-
 export default async function Dashboard() {
   const { user, error } = await getUserDetails();
 
