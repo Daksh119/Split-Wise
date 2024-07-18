@@ -14,16 +14,14 @@ import NotFound from '@/components/not-found';
 import ErrorPage from '@/components/error-page';
 import CardWrapper from '../my-ui/card-wrapper';
 
-async function getUser() {
+export const dynamic = 'force-dynamic';
+
+export default async function Dashboard() {
   const { user, error } = await getUserDetails();
+
   if (error) {
     return <ErrorPage message={error} />;
   }
-  return user;
-}
-
-export default async function Dashboard() {
-  const user = await getUser();
 
   if (!user) {
     return <NotFound />
