@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CardDescription } from "@/components/ui/card"
-
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import dynamic from 'next/dynamic';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import TransactionsCard from '@/components/my-ui/transactions-card/TransactionsCard';
 
@@ -13,6 +12,10 @@ import DashboardGoupCard from '@/components/dashboard/DashboardGoupCard';
 import NotFound from '@/components/not-found';
 import ErrorPage from '@/components/error-page';
 import CardWrapper from '../my-ui/card-wrapper';
+
+const DashboardHeader = dynamic(() => import('@/components/dashboard/DashboardHeader'), {
+  ssr: false,
+});
 
 export default async function Dashboard() {
   const { user, error } = await getUserDetails();
