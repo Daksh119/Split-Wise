@@ -1,28 +1,28 @@
 import React from "react";
 
-import {
-    File,
-    ListFilter,
-} from "lucide-react";
+// import {
+//     File,
+//     ListFilter,
+// } from "lucide-react";
 
 import CardWrapper from "@/components/my-ui/card-wrapper"
 import TransactionsTable from "./TransactionsTable";
 
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button";
+// import {
+//     DropdownMenu,
+//     DropdownMenuCheckboxItem,
+//     DropdownMenuContent,
+//     DropdownMenuLabel,
+//     DropdownMenuSeparator,
+//     DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu"
+// import {
+//     Tabs,
+//     TabsContent,
+//     TabsList,
+//     TabsTrigger,
+// } from "@/components/ui/tabs"
+// import { Button } from "@/components/ui/button";
 
 interface TransactionsCardProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
@@ -48,7 +48,7 @@ const TransactionsCard = React.forwardRef<HTMLDivElement, TransactionsCardProps>
             cardHeaderButton={headerButton}
             {...props}
         >
-            <Tabs defaultValue="week">
+            {/* <Tabs defaultValue="week">
                 {
                     showOptions &&
                     <div className="flex items-center justify-between">
@@ -95,9 +95,10 @@ const TransactionsCard = React.forwardRef<HTMLDivElement, TransactionsCardProps>
                     </div>
                 }
                 <TabsContent value="week">
-                    <TransactionsTable transactions={transactions} />
+                    
                 </TabsContent>
-            </Tabs>
+            </Tabs> */}
+            <TransactionsTable transactions={transactions} />
         </CardWrapper>
     )
 });
