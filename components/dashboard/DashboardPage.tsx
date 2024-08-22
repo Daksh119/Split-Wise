@@ -4,13 +4,14 @@ import { ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CardDescription } from "@/components/ui/card"
 import dynamic from 'next/dynamic';
-import TransactionsCard from '@/components/my-ui/transactions-card/TransactionsCard';
-
 import { getUserDetails } from '@/lib/actions/user';
 import NotFound from '@/components/not-found';
 import ErrorPage from '@/components/error-page';
 import CardWrapper from '../my-ui/card-wrapper';
 
+const TransactionsCard = dynamic(() => import('@/components/my-ui/transactions-card/TransactionsCard'), {
+  ssr: false,
+});
 const DashboardGoupCard = dynamic(() => import('@/components/dashboard/DashboardGoupCard'), {
   ssr: false,
 });
