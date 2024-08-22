@@ -36,11 +36,11 @@ const DashboardHeader = async ({ user }: DashboardHeaderProps) => {
                         </span>
                     </div>
                 </div>
-                <Button>
+                {/* <Button>
                     <Link href="/profile/edit">
                         Edit Profile
                     </Link>
-                </Button>
+                </Button> */}
             </Card>
         </>
     )
